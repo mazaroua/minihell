@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 18:44:42 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/22 16:25:24 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/03/26 01:45:33 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,7 +262,5 @@ char	*afdollar(t_token_list **tokens, char *line, t_tools *tools)
 	afdollar[j] = '\0';
 	addback(tokens, afdollar, AFDOLLAR);
 	tools->after_variable = 1;
-	// if (line[i] == 34 && !line[i + 1])
-	// 	return (line + i + 1);
 	return (line + i);
 }

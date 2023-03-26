@@ -24,7 +24,22 @@ typedef struct line
     char        *value;
     int         type;
     struct line *next;
+    struct line *prev;
 }t_token_list;
+
+typedef struct redirections
+{
+    int					type;
+    char				*file;
+	struct redirections next;
+}t_redirections;
+
+typedef struct cmd_line
+{
+    char            **str;
+    t_redirections  *redirections;
+    struct cmd_line *next
+}t_cmd_line;
 
 typedef struct tools
 {
@@ -42,8 +57,12 @@ char	*is_dquote(t_token_list **tokens, char *line, int *open, t_tools *tools);
 char	*afdollar(t_token_list **tokens, char *line, t_tools *tools);
 
 // Syntax
-void    syntax_red(t_token_list **tokens);
-void    syntax_pipe(t_token_list **tokens);
+int	syntax(t_token_list *tokens);
+
+// Parser
+t_cmd_line *parser(t_token_list **tokens);
+
+
 
 int	ft_isalnum(int c);
 int is_open_quote(char *line, char quote);

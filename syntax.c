@@ -6,108 +6,60 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 00:01:28 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/20 17:20:04 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/03/26 16:22:48 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_error(t_token_list **tokens)
+int	redirections_syntax(t_token_list **tokens)
 {
-	write(1, "parse error\n", ft_strlen("parse error\n"));
-	ft_lstclear(tokens);
+	t_token_list	*tokens_;
+
+	tokens_ = *tokens;
+	while (tokens_)
+	{
+		if (tokens_->type == RIGHTRED || tokens_->type == LEFTRED
+			|| tokens_->type == APPEND || tokens_->type == HEREDOC)
+		{
+			if (tokens_->next && tokens_->next->type == SPACE)
+				tokens_ = tokens_->next;
+			if (!tokens_->next || tokens_->next->type != WORD)
+			{
+				write(1, "parse error\n", ft_strlen("parse error\n"));
+				return (0);
+			}
+		}
+		tokens_ = tokens_->next;
+	}
+	return (1);
 }
 
-
-void    syntax_red(t_token_list **tokens)
+int	pipe_syntax(t_token_list **tokens)
 {
-    t_token_list	*t_tokens;
+	t_token_list *tokens_;
 
-	t_tokens = *tokens;
-	if(t_tokens != NULL)
+	tokens_ = *tokens;
+	while (tokens_)
 	{
-		if ((t_tokens->value[0] == '>' || t_tokens->value[0] == '<') 
-			&& !t_tokens->next ) // ila kan bo7do
+		if (tokens_->type == PIPE)
 		{
-			print_error(tokens);
-			return ;
+			if (tokens_->next && tokens_->next->type == SPACE)
+				tokens_ = tokens_->next;
+			if (!tokens_->next || tokens_->next->type == PIPE)
+			{
+				write(1, "parse error\n", ft_strlen("parse error\n"));
+				return (0);
+			}
 		}
-		while (t_tokens)
-		{
-			if ((t_tokens->value[ft_strlen(t_tokens->value - 1)] == '>'
-				|| t_tokens->value[ft_strlen(t_tokens->value - 1)] == '<')
-			&& !t_tokens->next) // ila kan f lakher
-			{
-				print_error(tokens);
-				return ;
-			}
-			else if ((t_tokens->next) && (t_tokens->value[0] == '>' || t_tokens->value[0] == '<')
-			&& t_tokens->next->value[0] == 32) // >> >
-			{
-				if (t_tokens->next->next->value[0] == '>' || t_tokens->next->next->value[0] == '<')
-				{
-					print_error(tokens);
-					return ;
-				}
-				else if (t_tokens->next->next->value[0] == '|')
-				{
-					print_error(tokens);
-					return ;
-				}
-			}
-			else if(t_tokens->value[0] == '>' && t_tokens->value[1] == '>' 
-				&& t_tokens->next->value[0] == '>' ) // >>>
-			{
-				print_error(tokens);
-				return ;
-			}
-			else if(t_tokens->value[0] == '<' && t_tokens->value[1] == '<' 
-				&& t_tokens->next->value[0] == '<' ) // >>>
-			{
-				print_error(tokens);
-				return ;
-			}
-			else if ((t_tokens->value[0] == '>' && t_tokens->next->value[0] == '<') 
-					|| (t_tokens->value[0] == '<' && t_tokens->next->value[0] == '>'))
-			{
-				print_error(tokens);
-					return ;
-			}
-			t_tokens = t_tokens->next;
-		}
+		tokens_ = tokens_->next;
 	}
+	return (1);
 }
 
-void    syntax_pipe(t_token_list **tokens)
+int	syntax(t_token_list *tokens)
 {
-	t_token_list	*t_tokens;
-	
-	t_tokens = *tokens;
-	if (!*tokens)
-		return ;
-	if (t_tokens->value[0] == '|')
-	{
-		print_error(tokens);
-		return ;
-	}
-	while(t_tokens)
-	{
-		if (t_tokens->value[0] == '|' && !t_tokens->next)
-		{
-			print_error(tokens);
-			return ;
-		}
-		else if (t_tokens->value[0] == '|' && t_tokens->next->value[0] == '|')
-		{
-			print_error(tokens);
-			return ;
-		}
-		else if (t_tokens->value[0] == '|' && t_tokens->next->value[0] == 32 
-				&& t_tokens->next->next->value[0] == '|')
-		{
-			print_error(tokens);
-			return ;		
-		}
-		t_tokens = t_tokens->next;
-	}
+	if (redirections_syntax(&tokens) && pipe_syntax(&tokens))
+		return (1);
+	return (0);
 }

@@ -178,8 +178,10 @@ t_token_list *new_token(char *value, int type)
 void    addback(t_token_list **tokens, char *value, int type)
 {
     t_token_list    *curr;
+	t_token_list	*p;
 
     curr = *tokens;
+	p = *tokens;
     if (!*tokens)
         *tokens = new_token(value, type);
     else
