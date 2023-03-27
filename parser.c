@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 16:29:26 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/27 18:06:41 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/03/27 18:16:41 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,11 +120,10 @@ t_cmd_line *parser(t_token_list *tokens)
 	
 	cmd_line = NULL;
 	redirections = NULL;
-	str = malloc(sizeof(char *) * (allocate2d(&tokens) + 1));
 	while (tokens)
 	{
 		i = 0;
-		str[i] = malloc(to_alloc_count(&tokens));
+		str = malloc(sizeof(char *) * (to_alloc_count(&tokens) + 1));
 		while (tokens && tokens->type != PIPE && tokens->type != NLINE)
 		{
 			if (tokens->type == WORD)
@@ -169,5 +168,11 @@ t_cmd_line *parser(t_token_list *tokens)
 	int j = 0;
 	while (cmd_line->str[j])
 		printf("%s\n", cmd_line->str[j++]);
+	while (cmd_line->redirections)
+	{
+		printf("%s\n", cmd_line->redirections->file);
+		printf("%d\n", cmd_line->redirections->type);
+		cmd_line->redirections = cmd_line->redirections->next;
+	}
 	return (NULL);
 }
