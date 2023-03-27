@@ -31,14 +31,14 @@ typedef struct redirections
 {
     int					type;
     char				*file;
-	struct redirections next;
+	struct redirections *next;
 }t_redirections;
 
 typedef struct cmd_line
 {
     char            **str;
     t_redirections  *redirections;
-    struct cmd_line *next
+    struct cmd_line *next;
 }t_cmd_line;
 
 typedef struct tools
@@ -60,7 +60,7 @@ char	*afdollar(t_token_list **tokens, char *line, t_tools *tools);
 int	syntax(t_token_list *tokens);
 
 // Parser
-t_cmd_line *parser(t_token_list **tokens);
+t_cmd_line *parser(t_token_list *tokens);
 
 
 
