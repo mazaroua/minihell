@@ -18,6 +18,7 @@
 #define D_QUOTE 8
 #define WORD 9
 #define AFDOLLAR 10
+#define NLINE 11
 
 typedef struct line
 {
@@ -63,7 +64,7 @@ int	syntax(t_token_list *tokens);
 t_cmd_line *parser(t_token_list *tokens);
 
 
-
+void	free_2d(char **str);
 int	ft_isalnum(int c);
 int is_open_quote(char *line, char quote);
 int     ft_strcmp(char *s1, char *s2);

@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 23:54:41 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/22 16:26:00 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/03/27 16:41:56 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,5 +56,6 @@ t_token_list *tokenizer(char *line)
             line = is_word(&tokens, line);
 		}
     }
+	addback(&tokens, "N", NLINE);
 	return(tokens);
 }

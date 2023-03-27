@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 16:29:26 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/27 02:52:49 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/03/27 18:06:41 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	to_alloc_count(t_token_list **tokens)
 
 	tokens_ = *tokens;
 	i = 0;
-	while (tokens_ && tokens_->type != PIPE)
+	while (tokens_ && tokens_->type != PIPE && tokens_->type != NLINE)
 	{
 		if (tokens_->type == RIGHTRED || tokens_->type == LEFTRED
 			|| tokens_->type == APPEND || tokens_->type == HEREDOC)
@@ -79,18 +79,6 @@ t_cmd_line	*init_cmdline(char **str, t_redirections *redirections)
 	return (cmd);
 }
 
-void	free_2d(char **str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	while (i > -1)
-		free(str[i--]);
-	free(str);
-}
-
 void	fill_cmd_line(t_cmd_line **cmdline, t_cmd_line *new)
 {
 	t_cmd_line	*curr;
@@ -107,6 +95,22 @@ void	fill_cmd_line(t_cmd_line **cmdline, t_cmd_line *new)
 	
 }
 
+int	allocate2d(t_token_list **tokens)
+{
+	t_token_list	*tokens_;
+	int	i;
+
+	tokens_ = *tokens;
+	i = 1;
+	while (tokens_->type != NLINE)
+	{
+		if (tokens_->type == PIPE)
+			i++;
+		tokens_ = tokens_->next;
+	}
+	return (i);
+}
+
 t_cmd_line *parser(t_token_list *tokens)
 {
     t_cmd_line		*cmd_line;
@@ -116,28 +120,27 @@ t_cmd_line *parser(t_token_list *tokens)
 	
 	cmd_line = NULL;
 	redirections = NULL;
+	str = malloc(sizeof(char *) * (allocate2d(&tokens) + 1));
 	while (tokens)
 	{
 		i = 0;
-		str = malloc(to_alloc_count(&tokens) + 1);
-		while (tokens && tokens->type != PIPE)
+		str[i] = malloc(to_alloc_count(&tokens));
+		while (tokens && tokens->type != PIPE && tokens->type != NLINE)
 		{
 			if (tokens->type == WORD)
 			{
 				if ((tokens->next && tokens->next->type == WORD))
 				{
-					str[i] = ft_strjoin(tokens->value, tokens->next->value);
-					i++;
+					str[i++] = ft_strjoin(tokens->value, tokens->next->value);
 					tokens = tokens->next->next;
 				}
 				else
 				{
-					str[i] = tokens->value;
-					i++;
+					str[i++] = tokens->value;
 					tokens = tokens->next;
 				}
 			}
-			else if (tokens && (tokens->type == RIGHTRED || tokens->type == LEFTRED
+			if (tokens && (tokens->type == RIGHTRED || tokens->type == LEFTRED
 				|| tokens->type == APPEND || tokens->type == HEREDOC))
 			{
 				if (tokens->next->type == WORD)
@@ -151,18 +154,20 @@ t_cmd_line *parser(t_token_list *tokens)
 					tokens = tokens->next->next->next;
 				}
 			}
-			else if (tokens && tokens->type == SPACE)
-				tokens = tokens->next;	
+			if (tokens && tokens->type == SPACE)
+				tokens = tokens->next;
 		}
-		if (!tokens)
+		if (tokens->type == NLINE)
 		{
 			str[i] = NULL;
-			//fill_cmd_line(&cmd_line, init_cmdline(str, redirections));
-			int j = 0;
-			while (str[j])
-				printf("%s\n", str[j++]);
+			fill_cmd_line(&cmd_line, init_cmdline(str, redirections));
+			break;
 		}
 	
 	}
+
+	int j = 0;
+	while (cmd_line->str[j])
+		printf("%s\n", cmd_line->str[j++]);
 	return (NULL);
 }

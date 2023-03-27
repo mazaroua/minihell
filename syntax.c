@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 00:01:28 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/26 16:22:48 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/03/27 16:42:58 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@ int	redirections_syntax(t_token_list **tokens)
 	t_token_list	*tokens_;
 
 	tokens_ = *tokens;
-	while (tokens_)
+	while (tokens_->type != NLINE)
 	{
 		if (tokens_->type == RIGHTRED || tokens_->type == LEFTRED
 			|| tokens_->type == APPEND || tokens_->type == HEREDOC)
 		{
 			if (tokens_->next && tokens_->next->type == SPACE)
 				tokens_ = tokens_->next;
-			if (!tokens_->next || tokens_->next->type != WORD)
+			if (tokens_->next->type == NLINE || tokens_->next->type != WORD)
 			{
 				write(1, "parse error\n", ft_strlen("parse error\n"));
 				return (0);
@@ -40,13 +40,13 @@ int	pipe_syntax(t_token_list **tokens)
 	t_token_list *tokens_;
 
 	tokens_ = *tokens;
-	while (tokens_)
+	while (tokens_->type != NLINE)
 	{
 		if (tokens_->type == PIPE)
 		{
 			if (tokens_->next && tokens_->next->type == SPACE)
 				tokens_ = tokens_->next;
-			if (!tokens_->next || tokens_->next->type == PIPE)
+			if (tokens_->next->type == NLINE || tokens_->next->type == PIPE)
 			{
 				write(1, "parse error\n", ft_strlen("parse error\n"));
 				return (0);
