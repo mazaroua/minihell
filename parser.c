@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 16:29:26 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/27 18:19:38 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/03/27 22:51:33 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,22 +95,6 @@ void	fill_cmd_line(t_cmd_line **cmdline, t_cmd_line *new)
 	
 }
 
-int	allocate2d(t_token_list **tokens)
-{
-	t_token_list	*tokens_;
-	int	i;
-
-	tokens_ = *tokens;
-	i = 1;
-	while (tokens_->type != NLINE)
-	{
-		if (tokens_->type == PIPE)
-			i++;
-		tokens_ = tokens_->next;
-	}
-	return (i);
-}
-
 t_cmd_line *parser(t_token_list *tokens)
 {
     t_cmd_line		*cmd_line;
@@ -119,11 +103,11 @@ t_cmd_line *parser(t_token_list *tokens)
 	int				i;
 	
 	cmd_line = NULL;
-	redirections = NULL;
 	while (tokens)
 	{
 		i = 0;
 		str = malloc(sizeof(char *) * (to_alloc_count(&tokens) + 1));
+		redirections = NULL;
 		while (tokens && tokens->type != PIPE && tokens->type != NLINE)
 		{
 			if (tokens->type == WORD)
@@ -156,20 +140,20 @@ t_cmd_line *parser(t_token_list *tokens)
 			if (tokens && tokens->type == SPACE)
 				tokens = tokens->next;
 		}
-		if (tokens->type == NLINE)
+		if (tokens->type == NLINE || tokens->type == PIPE)
 		{
 			str[i] = NULL;
 			fill_cmd_line(&cmd_line, init_cmdline(str, redirections));
-			break;
+			tokens = tokens->next;
 		}
 	
 	}
 
-	// int j = 0;
-	// while (cmd_line->str[j])
-	// 	printf("%s\n", cmd_line->str[j++]);
-	// while (cmd_line->redirections)
-	// {
+	int j = 0;
+	while (cmd_line->next->str[j])
+		printf("%s\n", cmd_line->next->str[j++]);
+	//while (cmd_line->redirections)
+	//{
 	// 	printf("%s\n", cmd_line->redirections->file);
 	// 	printf("%d\n", cmd_line->redirections->type);
 	// 	cmd_line->redirections = cmd_line->redirections->next;
