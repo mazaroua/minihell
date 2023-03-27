@@ -1,8 +1,10 @@
 NAME = minishell
-CC = cc
+CC = cc 
 FLAGS = -Wall -Werror -Wextra -g
+
 SRC = minishell.c utils.c utils2.c tokenizer.c tokenizer_utils.c syntax.c parser.c
 OBJ = $(SRC:.c=.o)
+
 
 all:$(NAME)
 
@@ -20,4 +22,4 @@ fclean:clean
 
 re:fclean all
 
-.PHONY: all fclean clean
+.PHONY: all fclean clean   
