@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 16:29:26 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/27 22:51:33 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/03/31 17:19:05 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,14 @@ int	to_alloc_count(t_token_list **tokens)
 				tokens_ = tokens_->next;
 				
 		}
-		if (tokens_ && tokens_->type == SPACE)
+		if (tokens_ && (tokens_->type == SPACE))
 			tokens_ = tokens_->next;
-		if (tokens_ && tokens_->type == WORD)
+		if (tokens_ && (tokens_->type == WORD || tokens_->type == DOLLAR))
 		{
-			tokens_ = tokens_->next;
+			if (tokens_->type == DOLLAR)
+				tokens_ = tokens_->next;
+			while (tokens_ && (tokens_->type == WORD || tokens_->type == AFDOLLAR))
+				tokens_ = tokens_->next;	
 			i++;
 		}
 	}
@@ -57,6 +60,8 @@ void	fill_redirections_list(t_redirections **redirections, t_redirections *new)
 {
 	t_redirections	*curr;
 
+	if (!new)
+		return ;
 	curr = *redirections;
 	if (!*redirections)
 		*redirections = new;
@@ -68,13 +73,22 @@ void	fill_redirections_list(t_redirections **redirections, t_redirections *new)
 	}
 }
 
-t_cmd_line	*init_cmdline(char **str, t_redirections *redirections)
+void	separator(t_cmd_line *cmd, t_token_list *token)
+{
+	if (token->type == NLINE)
+		cmd->separator = e_nline;
+	else if (token->type == PIPE)
+		cmd->separator = e_pipe;
+}
+
+t_cmd_line	*init_cmdline(char **str, t_redirections *redirections, t_token_list *token)
 {
 	t_cmd_line	*cmd;
 
 	cmd = malloc(sizeof(t_cmd_line));
 	cmd->str = str;
 	cmd->redirections = redirections;
+	separator(cmd, token);
 	cmd->next = NULL;
 	return (cmd);
 }
@@ -83,6 +97,8 @@ void	fill_cmd_line(t_cmd_line **cmdline, t_cmd_line *new)
 {
 	t_cmd_line	*curr;
 
+	if (!new)
+		return ;
 	curr = *cmdline;
 	if (!*cmdline)
 		*cmdline = new;
@@ -95,34 +111,32 @@ void	fill_cmd_line(t_cmd_line **cmdline, t_cmd_line *new)
 	
 }
 
-t_cmd_line *parser(t_token_list *tokens)
+void *parser(t_cmd_line *cmd_line, t_token_list *tokens)
 {
-    t_cmd_line		*cmd_line;
     char			**str;
 	t_redirections	*redirections;
 	int				i;
-	
 	cmd_line = NULL;
+	char *tmp;
 	while (tokens)
 	{
 		i = 0;
+		tmp = NULL;
 		str = malloc(sizeof(char *) * (to_alloc_count(&tokens) + 1));
 		redirections = NULL;
 		while (tokens && tokens->type != PIPE && tokens->type != NLINE)
 		{
-			if (tokens->type == WORD)
+			if (tokens->type == WORD || tokens->type == DOLLAR)
 			{
-				if ((tokens->next && tokens->next->type == WORD))
-				{
-					str[i++] = ft_strjoin(tokens->value, tokens->next->value);
-					tokens = tokens->next->next;
-				}
-				else
-				{
-					str[i++] = tokens->value;
+				if (tokens->type == DOLLAR && tokens->next->type == AFDOLLAR)
 					tokens = tokens->next;
-				}
-			}
+				if (!tmp)
+					tmp = tokens->value;
+				else
+					tmp = ft_strjoin(tmp, tokens->value);
+				str[i] = tmp;
+				tokens = tokens->next;
+			}	
 			if (tokens && (tokens->type == RIGHTRED || tokens->type == LEFTRED
 				|| tokens->type == APPEND || tokens->type == HEREDOC))
 			{
@@ -138,25 +152,23 @@ t_cmd_line *parser(t_token_list *tokens)
 				}
 			}
 			if (tokens && tokens->type == SPACE)
+			{
 				tokens = tokens->next;
+				tmp = NULL;
+				i++;
+			}
 		}
 		if (tokens->type == NLINE || tokens->type == PIPE)
 		{
-			str[i] = NULL;
-			fill_cmd_line(&cmd_line, init_cmdline(str, redirections));
+			str[i + 1] = NULL;
+			fill_cmd_line(&cmd_line, init_cmdline(str, redirections, tokens));
 			tokens = tokens->next;
 		}
 	
 	}
-
 	int j = 0;
-	while (cmd_line->next->str[j])
-		printf("%s\n", cmd_line->next->str[j++]);
-	//while (cmd_line->redirections)
-	//{
-	// 	printf("%s\n", cmd_line->redirections->file);
-	// 	printf("%d\n", cmd_line->redirections->type);
-	// 	cmd_line->redirections = cmd_line->redirections->next;
-	// }
+	while ((cmd_line)->str[j]){
+			printf("%s\n", (cmd_line)->str[j++]);
+	}
 	return (NULL);
 }

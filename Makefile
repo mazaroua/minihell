@@ -1,7 +1,6 @@
 NAME = minishell
 CC = cc 
-FLAGS = -Wall -Werror -Wextra -g
-
+FLAGS = -g #-Wall #-Werror #-Wextra 
 SRC = minishell.c utils.c utils2.c tokenizer.c tokenizer_utils.c syntax.c parser.c
 OBJ = $(SRC:.c=.o)
 

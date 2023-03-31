@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 18:44:42 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/26 01:45:33 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/03/30 13:58:13 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,11 @@ char    *is_dollar_pipe(t_token_list **tokens, char *line)
 {
     if(*line == '$')
     {
+		if (*(line + 1) == '$')
+		{
+			addback(tokens, ft_itoa(getpid()), WORD);
+        	return (line + 2);
+		}
         addback(tokens,"$", DOLLAR);
         return (line + 1);
     }
@@ -133,7 +138,7 @@ int to_alloc(char *line)
 	return (j);
 }
 
-char    *is_squote(t_token_list **tokens, char *line, int *open)
+char    *is_squote(t_token_list **tokens, char *line, int *open, t_tools *tools)
 {
     int i;
     int j;
@@ -146,6 +151,13 @@ char    *is_squote(t_token_list **tokens, char *line, int *open)
     count = is_open_quote(line, '\'');
     flag = 0;
 	word = malloc(to_alloc(line) + 1);
+	if (tools->after_variable == 1)
+	{
+		count = 0;
+		line = is_dquote(tokens, line, open, tools);
+		tools->after_variable = 0;
+		return (line);
+	}
 	if (count == 0)
 	{
 		while (line[i])

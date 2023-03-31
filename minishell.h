@@ -35,12 +35,20 @@ typedef struct redirections
 	struct redirections *next;
 }t_redirections;
 
+typedef enum sep
+{
+    e_pipe,
+    e_nline,
+} t_sep;
+///
 typedef struct cmd_line
 {
     char            **str;
     t_redirections  *redirections;
+    t_sep			separator;
     struct cmd_line *next;
 }t_cmd_line;
+///
 
 typedef struct tools
 {
@@ -53,7 +61,7 @@ char    *is_redirections(t_token_list **tokens, char *line);
 char    *is_wspace(t_token_list **tokens, char *line);
 char    *is_dollar_pipe(t_token_list **tokens, char *line);
 char    *is_word(t_token_list **tokens, char *line);
-char    *is_squote(t_token_list **tokens, char *line, int *open);
+char    *is_squote(t_token_list **tokens, char *line, int *open, t_tools *tools);
 char	*is_dquote(t_token_list **tokens, char *line, int *open, t_tools *tools);
 char	*afdollar(t_token_list **tokens, char *line, t_tools *tools);
 
@@ -61,13 +69,16 @@ char	*afdollar(t_token_list **tokens, char *line, t_tools *tools);
 int	syntax(t_token_list *tokens);
 
 // Parser
-t_cmd_line *parser(t_token_list *tokens);
+void *parser(t_cmd_line *cmd_line, t_token_list *tokens);
+int	to_alloc_count(t_token_list **tokens);
+
 
 
 void	free_2d(char **str);
 int	ft_isalnum(int c);
 int is_open_quote(char *line, char quote);
 int     ft_strcmp(char *s1, char *s2);
+int	ft_strncmp(const char *str1, const char *str2, size_t n);
 int     ft_strlen(char *str);
 int		count(char *line);
 int		inside_quotes(char *line, int i);
@@ -85,4 +96,8 @@ char	*ft_strjoin(char *s1, char *s2);
 char	**ft_split(char const *s, char c);
 void free_node(t_token_list **tokens);
 t_token_list *new_token(char *value, int type);
+char	*ft_itoa(int n);
+char	*ft_strdup(char *src);
+
+
 #endif

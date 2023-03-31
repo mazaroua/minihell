@@ -10,6 +10,18 @@ int ft_strcmp(char *s1, char *s2)
     return (s1[i] - s2[i]);
 }
 
+int	ft_strncmp(const char *str1, const char *str2, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	if (n == 0)
+		return (0);
+	while ((str1[i] && str2[i]) && (str1[i] == str2[i]) && i < n - 1)
+		i++;
+	return ((unsigned char)str1[i] - (unsigned char)str2[i]);
+}
+
 int	ft_isalnum(int c)
 {
 	if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z')
@@ -21,7 +33,8 @@ int	ft_isalnum(int c)
 int ft_strlen(char *str)
 {
     int i;
-
+	if (!str)
+		return (0);
     i = 0;
     while (str[i])
         i++;
@@ -52,7 +65,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (s2[++i])
 		new[j + i] = s2[i];
 	new[j + i] = '\0';
-	free(s1);
+	// free(s1);
 	return (new);
 }
 
@@ -178,10 +191,10 @@ t_token_list *new_token(char *value, int type)
 void    addback(t_token_list **tokens, char *value, int type)
 {
     t_token_list    *curr;
-	t_token_list	*p;
 
     curr = *tokens;
-	p = *tokens;
+	if (!*value)
+		return ;
     if (!*tokens)
         *tokens = new_token(value, type);
     else
@@ -202,4 +215,64 @@ void	free_2d(char **str)
 	while (i > -1)
 		free(str[i--]);
 	free(str);
+}
+
+//
+
+static int	count_num(int n)
+{
+	int	c;
+
+	c = 0;
+	if (n < 0)
+		c = 1;
+	while (n)
+	{
+		c += 1;
+		n = n / 10;
+	}
+	return (c);
+}
+
+char	*ft_itoa(int n)
+{
+	int		len;
+	char	*str;
+
+	len = count_num(n);
+	if (n == 0)
+		return (ft_strdup("0"));
+	if (n == -2147483648)
+		return (ft_strdup("-2147483648"));
+	str = malloc(sizeof(char) * count_num(n) + 1);
+	if (str == NULL)
+		return (NULL);
+	if (n < 0)
+	{
+		n *= -1;
+		str[0] = '-';
+	}
+	str[len] = '\0';
+	len--;
+	while (n > 0)
+	{
+		str[len--] = (n % 10) + '0';
+		n = n / 10;
+	}
+	return (str);
+}
+
+char	*ft_strdup(char *src)
+{
+	int		i;
+	char	*new;
+
+	i = 0;
+	new = malloc(sizeof(char) * ft_strlen(src) + 1);
+	if (!(new))
+		return (NULL);
+	while (*src)
+		new[i++] = *src++;
+	new[i] = '\0';
+	return (new);
 }
