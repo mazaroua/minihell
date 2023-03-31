@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 16:29:26 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/31 17:43:19 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/03/31 18:19:42 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,9 @@ void *parser(t_cmd_line **cmd_line, t_token_list *tokens)
 			fill_cmd_line(cmd_line, init_cmdline(str, redirections, tokens));
 			tokens = tokens->next;
 		}
-	
+		// int j = 0;
+		// while ((*cmd_line)->str[j])
+		// 	printf("%s\n", (*cmd_line)->str[j++]);
 	}	
 	return (NULL);
 }

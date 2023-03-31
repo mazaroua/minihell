@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 23:54:41 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/31 17:56:48 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/03/31 18:28:32 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ t_token_list *tokenizer(char *line, int *i)
 	t_tools			tools;
 
 	tokens = NULL;
+	*i = 0;
     while (*line)
     {
         if (ft_strchr(" \t\v\f\r", *line))
@@ -55,9 +56,7 @@ t_token_list *tokenizer(char *line, int *i)
 				break;
 		}
         else
-		{
             line = is_word(&tokens, line);
-		}
     }
 	addback(&tokens, "N", NLINE);
 	return(tokens);
