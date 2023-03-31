@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 15:26:43 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/31 17:00:09 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/03/31 18:02:17 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	expand(t_token_list **tokens)
 {
 	t_token_list	*token;
 
+	if (!*tokens)
+		return ;
 	token = *tokens;
 	while (token->type != NLINE)
 	{
@@ -31,13 +33,17 @@ void	expand(t_token_list **tokens)
 void	body(char *line)
 {
 	t_token_list	*tokens;
+	int				i;
 
-	tokens = tokenizer(line);
-	expand(&tokens);
+	tokens = tokenizer(line, &i);
 	t_cmd_line		*cmd_line = NULL;
-	if (syntax(tokens))
+	if (syntax(tokens) && i != 1)
 	{
-		parser(cmd_line, tokens);
+		expand(&tokens);
+		parser(&cmd_line, tokens);
+		int j = 0;
+		while (cmd_line->str[j])
+			printf("%s\n", cmd_line->str[j++]);
 	}
 	
 	

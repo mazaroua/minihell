@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 23:54:41 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/30 13:58:40 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/03/31 17:56:48 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,11 @@
 // 	free(head);
 // }
 
-t_token_list *tokenizer(char *line)
+t_token_list *tokenizer(char *line, int *i)
 {
 	t_token_list	*tokens;
 	t_tools			tools;
-	int				i;
 
-	i = 0;
 	tokens = NULL;
     while (*line)
     {
@@ -39,13 +37,13 @@ t_token_list *tokenizer(char *line)
             line = is_dollar_pipe(&tokens, line);
         else if (ft_strchr("\'", *line))
 		{
-            line = is_squote(&tokens, line, &i, &tools);
-			if (i == 1)
+            line = is_squote(&tokens, line, i, &tools);
+			if (*i == 1)
 				break;
 		}
 		else if (ft_strchr("\"", *line))
 		{
-			line = is_dquote(&tokens, line, &i, &tools);
+			line = is_dquote(&tokens, line, i, &tools);
 			while (!ft_strncmp(line, "$$", 2))
 			{
 				line = is_dollar_pipe(&tokens, line);
@@ -53,7 +51,7 @@ t_token_list *tokenizer(char *line)
 			}
 			if (*line == '$')
 				line = afdollar(&tokens, line, &tools);
-			if (i == 1)
+			if (*i == 1)
 				break;
 		}
         else

@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 00:01:28 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/27 16:42:58 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/03/31 17:44:53 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ int	pipe_syntax(t_token_list **tokens)
 
 int	syntax(t_token_list *tokens)
 {
+	if (!tokens)
+		return (0);
 	if (redirections_syntax(&tokens) && pipe_syntax(&tokens))
 		return (1);
 	return (0);

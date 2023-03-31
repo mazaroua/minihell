@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 18:44:42 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/30 13:58:13 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/03/31 17:56:00 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,6 +245,7 @@ char	*is_dquote(t_token_list **tokens, char *line, int *open, t_tools *tools)
 		write(1, "Open quote\n", ft_strlen("Open quote\n"));
 		ft_lstclear(tokens);
 		*open = 1;
+		exit(0);
 	}
 	return (line + i);
 }

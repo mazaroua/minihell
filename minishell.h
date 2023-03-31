@@ -56,7 +56,7 @@ typedef struct tools
 }t_tools;
 
 // Tokenizer Utils
-t_token_list *tokenizer(char *line);
+t_token_list *tokenizer(char *line, int *i);
 char    *is_redirections(t_token_list **tokens, char *line);
 char    *is_wspace(t_token_list **tokens, char *line);
 char    *is_dollar_pipe(t_token_list **tokens, char *line);
@@ -69,7 +69,7 @@ char	*afdollar(t_token_list **tokens, char *line, t_tools *tools);
 int	syntax(t_token_list *tokens);
 
 // Parser
-void *parser(t_cmd_line *cmd_line, t_token_list *tokens);
+void *parser(t_cmd_line **cmd_line, t_token_list *tokens);
 int	to_alloc_count(t_token_list **tokens);
 
 

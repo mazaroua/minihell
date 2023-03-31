@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 16:29:26 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/31 17:19:05 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/03/31 17:43:19 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,12 +111,12 @@ void	fill_cmd_line(t_cmd_line **cmdline, t_cmd_line *new)
 	
 }
 
-void *parser(t_cmd_line *cmd_line, t_token_list *tokens)
+void *parser(t_cmd_line **cmd_line, t_token_list *tokens)
 {
     char			**str;
 	t_redirections	*redirections;
 	int				i;
-	cmd_line = NULL;
+	//*cmd_line = NULL;
 	char *tmp;
 	while (tokens)
 	{
@@ -161,14 +161,10 @@ void *parser(t_cmd_line *cmd_line, t_token_list *tokens)
 		if (tokens->type == NLINE || tokens->type == PIPE)
 		{
 			str[i + 1] = NULL;
-			fill_cmd_line(&cmd_line, init_cmdline(str, redirections, tokens));
+			fill_cmd_line(cmd_line, init_cmdline(str, redirections, tokens));
 			tokens = tokens->next;
 		}
 	
-	}
-	int j = 0;
-	while ((cmd_line)->str[j]){
-			printf("%s\n", (cmd_line)->str[j++]);
-	}
+	}	
 	return (NULL);
 }
