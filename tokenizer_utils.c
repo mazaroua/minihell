@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 18:44:42 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/31 17:56:00 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/04/01 01:23:44 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,9 @@ char    *is_dollar_pipe(t_token_list **tokens, char *line)
         	return (line + 2);
 		}
         addback(tokens,"$", DOLLAR);
-        return (line + 1);
+		line += 1;
+		line = afdollar(tokens, line, NULL);
+        return (line);
     }
     else if(*line == '|')
     {
@@ -71,11 +73,11 @@ char    *is_word(t_token_list **tokens, char *line)
     char    *word;
 
     i = 0;
-    while (!ft_strchr(" \t\v\f\r><$|\'\"", line[i]))
+    while (!ft_strchr(" \t\v\f\r><|\'\"", line[i]))
         i++;
 	word = malloc(i + 1);
 	i = 0;
-	while (!ft_strchr(" \t\v\f\r><$|\'\"", line[i]))
+	while (!ft_strchr(" \t\v\f\r><|\'\"", line[i]))
 	{
 		
 		word[i] = line[i];
@@ -245,7 +247,6 @@ char	*is_dquote(t_token_list **tokens, char *line, int *open, t_tools *tools)
 		write(1, "Open quote\n", ft_strlen("Open quote\n"));
 		ft_lstclear(tokens);
 		*open = 1;
-		exit(0);
 	}
 	return (line + i);
 }
@@ -258,7 +259,8 @@ char	*afdollar(t_token_list **tokens, char *line, t_tools *tools)
 
 	i = 0;
 	j = 0;
-	line = is_dollar_pipe(tokens, line);
+	if (tools)
+		line = is_dollar_pipe(tokens, line);
 	while (line[i])
 	{
 		if ((line[i] != 34) && (ft_isalnum(line[i]) || line[i] == '_'))
@@ -274,6 +276,7 @@ char	*afdollar(t_token_list **tokens, char *line, t_tools *tools)
 	}
 	afdollar[j] = '\0';
 	addback(tokens, afdollar, AFDOLLAR);
-	tools->after_variable = 1;
+	if (tools)
+		tools->after_variable = 1;
 	return (line + i);
 }

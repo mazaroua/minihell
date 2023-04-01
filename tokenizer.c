@@ -6,20 +6,11 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 23:54:41 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/31 18:28:32 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/04/01 00:19:35 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// void free_node(t_token_list **tokens)
-// {
-// 	t_token_list *head;
-// 	head = *tokens;
-// 	if(!head->next)
-// 		free_node(&head->next);
-// 	free(head);
-// }
 
 t_token_list *tokenizer(char *line, int *i)
 {

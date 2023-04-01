@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 15:26:43 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/31 18:29:24 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/04/01 01:28:58 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,13 @@ void	expand(t_token_list **tokens)
 {
 	t_token_list	*token;
 
-	if (!*tokens)
+	if (!*tokens || (*tokens)->type == NLINE)
 		return ;
 	token = *tokens;
 	while (token->type != NLINE)
 	{
 		if (token->type == AFDOLLAR)
-		{
 			token->value = getenv(token->value);
-			// token->type = WORD;
-		}
 		token = token->next;
 	}
 }

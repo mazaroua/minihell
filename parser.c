@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 16:29:26 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/31 18:19:42 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/04/01 01:27:57 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,16 +108,15 @@ void	fill_cmd_line(t_cmd_line **cmdline, t_cmd_line *new)
 			curr = curr->next;
 		curr->next = new;
 	}
-	
 }
 
 void *parser(t_cmd_line **cmd_line, t_token_list *tokens)
 {
     char			**str;
 	t_redirections	*redirections;
+	char			*tmp;
 	int				i;
-	//*cmd_line = NULL;
-	char *tmp;
+	if (!tokens || tokens->type == NLINE)
 	while (tokens)
 	{
 		i = 0;
@@ -153,9 +152,10 @@ void *parser(t_cmd_line **cmd_line, t_token_list *tokens)
 			}
 			if (tokens && tokens->type == SPACE)
 			{
+				if (tokens->next->type != NLINE)
+					i++;
 				tokens = tokens->next;
 				tmp = NULL;
-				i++;
 			}
 		}
 		if (tokens->type == NLINE || tokens->type == PIPE)
@@ -164,9 +164,6 @@ void *parser(t_cmd_line **cmd_line, t_token_list *tokens)
 			fill_cmd_line(cmd_line, init_cmdline(str, redirections, tokens));
 			tokens = tokens->next;
 		}
-		// int j = 0;
-		// while ((*cmd_line)->str[j])
-		// 	printf("%s\n", (*cmd_line)->str[j++]);
-	}	
+	}
 	return (NULL);
 }

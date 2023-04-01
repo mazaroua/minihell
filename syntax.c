@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/20 00:01:28 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/03/31 17:44:53 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/04/01 01:28:27 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	pipe_syntax(t_token_list **tokens)
 
 int	syntax(t_token_list *tokens)
 {
-	if (!tokens)
+	if (!tokens || tokens->type == NLINE)
 		return (0);
 	if (redirections_syntax(&tokens) && pipe_syntax(&tokens))
 		return (1);
