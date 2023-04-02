@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 16:29:26 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/04/01 01:27:57 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/04/02 03:00:52 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,71 +45,6 @@ int	to_alloc_count(t_token_list **tokens)
 	return (i);
 }
 
-t_redirections	*init_redirection(int type, char *file)
-{
-	t_redirections	*redirection_node;
-
-	redirection_node = malloc(sizeof(t_redirections));
-	redirection_node->type = type;
-	redirection_node->file = file;
-	redirection_node->next = NULL;
-	return (redirection_node);
-}
-
-void	fill_redirections_list(t_redirections **redirections, t_redirections *new)
-{
-	t_redirections	*curr;
-
-	if (!new)
-		return ;
-	curr = *redirections;
-	if (!*redirections)
-		*redirections = new;
-	else
-	{
-		while (curr->next)
-			curr = curr->next;
-		curr->next = new;
-	}
-}
-
-void	separator(t_cmd_line *cmd, t_token_list *token)
-{
-	if (token->type == NLINE)
-		cmd->separator = e_nline;
-	else if (token->type == PIPE)
-		cmd->separator = e_pipe;
-}
-
-t_cmd_line	*init_cmdline(char **str, t_redirections *redirections, t_token_list *token)
-{
-	t_cmd_line	*cmd;
-
-	cmd = malloc(sizeof(t_cmd_line));
-	cmd->str = str;
-	cmd->redirections = redirections;
-	separator(cmd, token);
-	cmd->next = NULL;
-	return (cmd);
-}
-
-void	fill_cmd_line(t_cmd_line **cmdline, t_cmd_line *new)
-{
-	t_cmd_line	*curr;
-
-	if (!new)
-		return ;
-	curr = *cmdline;
-	if (!*cmdline)
-		*cmdline = new;
-	else
-	{
-		while (curr->next)
-			curr = curr->next;
-		curr->next = new;
-	}
-}
-
 void *parser(t_cmd_line **cmd_line, t_token_list *tokens)
 {
     char			**str;
@@ -117,12 +52,18 @@ void *parser(t_cmd_line **cmd_line, t_token_list *tokens)
 	char			*tmp;
 	int				i;
 	if (!tokens || tokens->type == NLINE)
+		return (NULL);
 	while (tokens)
 	{
 		i = 0;
 		tmp = NULL;
 		str = malloc(sizeof(char *) * (to_alloc_count(&tokens) + 1));
+		str[i + to_alloc_count(&tokens) + 1] = NULL;
 		redirections = NULL;
+		if (tokens && tokens->type == SPACE)
+		{
+			tokens = tokens->next;
+		}
 		while (tokens && tokens->type != PIPE && tokens->type != NLINE)
 		{
 			if (tokens->type == WORD || tokens->type == DOLLAR)
@@ -149,18 +90,20 @@ void *parser(t_cmd_line **cmd_line, t_token_list *tokens)
 					fill_redirections_list(&redirections, init_redirection(tokens->type, tokens->next->next->value));
 					tokens = tokens->next->next->next;
 				}
+				if (tokens && tokens->type == SPACE)
+					tokens = tokens->next;
 			}
 			if (tokens && tokens->type == SPACE)
 			{
-				if (tokens->next->type != NLINE)
+				if (tokens->next->type != NLINE && tokens->next->type != PIPE)
 					i++;
 				tokens = tokens->next;
 				tmp = NULL;
 			}
 		}
-		if (tokens->type == NLINE || tokens->type == PIPE)
+		if (tokens && (tokens->type == NLINE || tokens->type == PIPE))
 		{
-			str[i + 1] = NULL;
+			// str[i + 1] = NULL;
 			fill_cmd_line(cmd_line, init_cmdline(str, redirections, tokens));
 			tokens = tokens->next;
 		}

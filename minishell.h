@@ -4,7 +4,9 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <signal.h>
 #include <readline/readline.h>
+# include <readline/history.h>
 
 
 #define SPACE 0
@@ -49,6 +51,13 @@ typedef struct cmd_line
     struct cmd_line *next;
 }t_cmd_line;
 ///
+typedef	struct env_list
+{
+	char			*name;
+	char			*value;
+	struct env_list	*next;
+}t_env_list;
+
 
 typedef struct tools
 {
@@ -65,12 +74,23 @@ char    *is_squote(t_token_list **tokens, char *line, int *open, t_tools *tools)
 char	*is_dquote(t_token_list **tokens, char *line, int *open, t_tools *tools);
 char	*afdollar(t_token_list **tokens, char *line, t_tools *tools);
 
+// Expander
+void	expand(t_token_list **tokens, t_env_list **env);
+t_env_list	*add_var(char *name, char *value);
+void	fill_env_list(t_env_list **env_list, t_env_list *new);
+void	env_vars_list(t_env_list **env_list, char **env);
+
 // Syntax
 int	syntax(t_token_list *tokens);
 
 // Parser
-void *parser(t_cmd_line **cmd_line, t_token_list *tokens);
-int	to_alloc_count(t_token_list **tokens);
+void			*parser(t_cmd_line **cmd_line, t_token_list *tokens);
+t_redirections	*init_redirection(int type, char *file);
+void			fill_redirections_list(t_redirections **redirections, t_redirections *new);
+void			separator(t_cmd_line *cmd, t_token_list *token);
+t_cmd_line		*init_cmdline(char **str, t_redirections *redirections, t_token_list *token);
+void			fill_cmd_line(t_cmd_line **cmdline, t_cmd_line *new);
+int				to_alloc_count(t_token_list **tokens);
 
 
 
@@ -94,7 +114,7 @@ void	ft_lstclear(t_token_list	**lst);
 void    addback(t_token_list **tokens, char *value, int type);
 char	*ft_strjoin(char *s1, char *s2);
 char	**ft_split(char const *s, char c);
-void free_node(t_token_list **tokens);
+void    free_node(t_token_list **tokens);
 t_token_list *new_token(char *value, int type);
 char	*ft_itoa(int n);
 char	*ft_strdup(char *src);

@@ -6,42 +6,45 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 15:26:43 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/04/01 01:28:58 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/04/02 16:04:25 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	expand(t_token_list **tokens)
-{
-	t_token_list	*token;
-
-	if (!*tokens || (*tokens)->type == NLINE)
-		return ;
-	token = *tokens;
-	while (token->type != NLINE)
-	{
-		if (token->type == AFDOLLAR)
-			token->value = getenv(token->value);
-		token = token->next;
-	}
-}
-
-void	body(char *line)
+void	body(char *line, char **env)
 {
 	t_token_list	*tokens;
+	t_cmd_line		*cmd_line;
+	t_env_list		*env_list;
 	int				i;
 
 	tokens = tokenizer(line, &i);
-	t_cmd_line		*cmd_line = NULL;
+	cmd_line = NULL;
+	env_list = NULL;
 	if (syntax(tokens) && i != 1)
 	{
-		expand(&tokens);
+		env_vars_list(&env_list, env);
+		expand(&tokens, &env_list);
 		parser(&cmd_line, tokens);
-		int j = 0;
-		while ((cmd_line)->str[j])
-			printf("%s\n", (cmd_line)->str[j++]);
 	}
+		//////////////////////////////////////////////
+		int j = 0;
+		while (cmd_line->str[j])
+			printf("%s\n", cmd_line->str[j++]);
+		if (cmd_line->redirections)
+			printf("%d %s\n", cmd_line->redirections->type, cmd_line->redirections->file);
+		puts("--------");
+		if (cmd_line->next)
+		{
+			j = 0;
+			while (cmd_line->next->str[j])
+			printf("%s\n", cmd_line->next->str[j++]);
+			if (cmd_line->next->redirections)
+				printf("%d %s\n", cmd_line->next->redirections->type, cmd_line->next->redirections->file);
+
+		}
+		///////////////////////////////////////////////
 	
 	
 	// while (tokens)
@@ -66,15 +69,14 @@ int main(int ac, char **av, char **env)
 {
 	(void)ac;
 	(void)av;
-	(void)env;
 	
     char	*line;
-
     while (1)
     {
 		line = prompt();
 		if (!ft_strcmp(line, "exit"))
 			exit(0);
-		body(line);
+		if (line)
+			body(line, env);
     }
 }
