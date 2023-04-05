@@ -6,11 +6,26 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 16:40:48 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/04/05 01:01:52 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/04/05 15:01:57 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int count_var_len(char *line)
+{
+    int i;
+
+    i = 0;
+    while (line[i])
+    {
+        if ((line[i] != 34) && (ft_isalnum(line[i]) || line[i] == '_'))
+			i++;
+		else
+			break;
+    }
+    return (i);
+}
 
 char    *is_redirections(t_token_list **tokens, char *line, t_tools *tools)
 {
@@ -31,7 +46,21 @@ char    *is_redirections(t_token_list **tokens, char *line, t_tools *tools)
         {
             addback(tokens, "<<", HEREDOC);
             line = is_wspace(tokens, line + 2);
-            line = no_expand(tokens, line, tools);
+            while (*line == 34)
+            {
+                tools->no_expand = 0;
+                line = no_expand(tokens, line, tools);
+                if (tools->no_expand == 1)
+                {
+                    open_quote_error(tokens);
+                    return (NULL);
+                }
+            }
+            if (*line == '$')
+            {
+                addback(tokens, ft_strndup(line, count_var_len(line + 1) + 1), WORD);
+                line = line + count_var_len(line + 1) + 1;
+            }
             return (line);
         }
         addback(tokens, "<", LEFTRED);

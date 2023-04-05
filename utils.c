@@ -197,7 +197,7 @@ void    addback(t_token_list **tokens, char *value, int type)
     t_token_list    *curr;
 
     curr = *tokens;
-	if (!*value)
+	if (!value || !*value)
 		return ;
     if (!*tokens)
         *tokens = new_token(value, type);
@@ -368,7 +368,8 @@ char	*ft_strndup(char *src, int len)
 {
 	int		i;
 	char	*new;
-
+	if (len == 0)
+		return (NULL);
 	i = 0;
 	new = malloc(sizeof(char) * len + 1);
 	if (!(new))

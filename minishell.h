@@ -80,6 +80,7 @@ char			*afdollar(t_token_list **tokens, char *line);
 char			*is_space(t_token_list **tokens, char *line);
 char			*ft_dquotes(t_token_list **tokens, char *line, t_tools *tools);
 char	*no_expand(t_token_list **tokens, char	*line, t_tools *tools);
+void	open_quote_error(t_token_list **tokens);
 
 
 // Expander

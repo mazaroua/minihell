@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 15:26:43 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/04/05 01:03:02 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/04/05 15:57:53 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ void	body(char *line, char **env)
 		parser(&cmd_line, tokens);
 	}
 		//////////////////////////////////////////////
-		// int j = 0;
-		// while (cmd_line && cmd_line->str[j])
-		// 	printf("|%s|\n", cmd_line->str[j++]);
-		// // if (cmd_line->redirections)
+		int j = 0;
+		while (cmd_line && cmd_line->str[j])
+			printf("|%s|\n", cmd_line->str[j++]);
+		// if (cmd_line->redirections)
 		// {
 		// 	while (cmd_line->redirections)
 		// 	{
@@ -53,12 +53,12 @@ void	body(char *line, char **env)
 		///////////////////////////////////////////////
 	
 	
-	while (tokens)
-	{
-		printf("|%s| ", tokens->value);
-		printf("|%d|\n", tokens->type);
-		tokens = tokens->next;
-	}
+	// while (tokens)
+	// {
+	// 	printf("|%s| ", tokens->value);
+	// 	printf("|%d|\n", tokens->type);
+	// 	tokens = tokens->next;
+	// }
 }
 
 char    *prompt(void)
