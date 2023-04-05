@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 16:29:26 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/04/02 03:00:52 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/04/05 16:49:37 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,9 @@ void *parser(t_cmd_line **cmd_line, t_token_list *tokens)
 	{
 		i = 0;
 		tmp = NULL;
+		printf("%d\n", to_alloc_count(&tokens));
 		str = malloc(sizeof(char *) * (to_alloc_count(&tokens) + 1));
-		str[i + to_alloc_count(&tokens) + 1] = NULL;
+		str[i + to_alloc_count(&tokens)] = NULL;
 		redirections = NULL;
 		if (tokens && tokens->type == SPACE)
 		{
@@ -103,7 +104,6 @@ void *parser(t_cmd_line **cmd_line, t_token_list *tokens)
 		}
 		if (tokens && (tokens->type == NLINE || tokens->type == PIPE))
 		{
-			// str[i + 1] = NULL;
 			fill_cmd_line(cmd_line, init_cmdline(str, redirections, tokens));
 			tokens = tokens->next;
 		}
