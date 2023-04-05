@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 00:26:22 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/04/02 00:27:00 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/04/03 18:00:34 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,28 @@ void	expand(t_token_list **tokens, t_env_list **env)
 {
 	t_token_list	*token;
 	t_env_list		*envlist;
+	int				flag;
 
 	if (!*tokens || (*tokens)->type == NLINE)
 		return ;
-	envlist = *env;
 	token = *tokens;
-	while (token->type != NLINE)
+	while (token && token->type != NLINE)
 	{
-		if (token->type == AFDOLLAR)
+		if (token && token->type == AFDOLLAR)
 		{
+			flag = 0;
+			envlist = *env;
 			while (envlist)
 			{
 				if (!ft_strcmp(token->value, envlist->name))
+				{
 					token->value = envlist->value;
+					flag = 1;
+				}
 				envlist = envlist->next;
 			}
+			if (flag == 0)
+				token->value = ft_strdup("\0");
 		}
 		token = token->next;
 	}

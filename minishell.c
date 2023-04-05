@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 15:26:43 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/04/02 16:04:25 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/04/05 01:03:02 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,42 +17,48 @@ void	body(char *line, char **env)
 	t_token_list	*tokens;
 	t_cmd_line		*cmd_line;
 	t_env_list		*env_list;
-	int				i;
+	t_tools			tools;
 
-	tokens = tokenizer(line, &i);
 	cmd_line = NULL;
 	env_list = NULL;
-	if (syntax(tokens) && i != 1)
+	tokens = tokenizer(line, &tools);
+	if (tokens && syntax(tokens))
 	{
 		env_vars_list(&env_list, env);
 		expand(&tokens, &env_list);
 		parser(&cmd_line, tokens);
 	}
 		//////////////////////////////////////////////
-		int j = 0;
-		while (cmd_line->str[j])
-			printf("%s\n", cmd_line->str[j++]);
-		if (cmd_line->redirections)
-			printf("%d %s\n", cmd_line->redirections->type, cmd_line->redirections->file);
-		puts("--------");
-		if (cmd_line->next)
-		{
-			j = 0;
-			while (cmd_line->next->str[j])
-			printf("%s\n", cmd_line->next->str[j++]);
-			if (cmd_line->next->redirections)
-				printf("%d %s\n", cmd_line->next->redirections->type, cmd_line->next->redirections->file);
+		// int j = 0;
+		// while (cmd_line && cmd_line->str[j])
+		// 	printf("|%s|\n", cmd_line->str[j++]);
+		// // if (cmd_line->redirections)
+		// {
+		// 	while (cmd_line->redirections)
+		// 	{
+		// 		printf("%d %s\n", cmd_line->redirections->type, cmd_line->redirections->file);
+		// 		cmd_line->redirections = cmd_line->redirections->next;
+		// 	}
+		// }
+		//puts("--------");
+		// if (cmd_line->next)
+		// {
+		// 	int j = 0;
+		// 	while (cmd_line->next->str[j])
+		// 	printf("%s\n", cmd_line->next->str[j++]);
+		// 	if (cmd_line->next->redirections)
+		// 		printf("%d %s\n", cmd_line->next->redirections->type, cmd_line->next->redirections->file);
 
-		}
+		// }
 		///////////////////////////////////////////////
 	
 	
-	// while (tokens)
-	// {
-	// 	printf("|%s| ", tokens->value);
-	// 	printf("|%d|\n", tokens->type);
-	// 	tokens = tokens->next;
-	// }
+	while (tokens)
+	{
+		printf("|%s| ", tokens->value);
+		printf("|%d|\n", tokens->type);
+		tokens = tokens->next;
+	}
 }
 
 char    *prompt(void)

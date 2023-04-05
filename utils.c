@@ -73,6 +73,8 @@ void	ft_lstclear(t_token_list	**lst)
 {
 	t_token_list	*tmp;
 
+	if (!*lst)
+		return ;
 	tmp = *lst;
 	while (tmp)
 	{
@@ -164,6 +166,8 @@ char	*ft_strchr(char *str, int c)
 	int		i;
 	char	*ptr;
 
+	if (!str)
+		return (NULL);
 	if (c == '\0')
 		return ((char *)str + ft_strlen(str));
 	ptr = (NULL);
@@ -358,4 +362,19 @@ char	**ft_split(char const *s, char c)
 		return (NULL);
 	str = ft_split1(str, s, c);
 	return (str);
+}
+
+char	*ft_strndup(char *src, int len)
+{
+	int		i;
+	char	*new;
+
+	i = 0;
+	new = malloc(sizeof(char) * len + 1);
+	if (!(new))
+		return (NULL);
+	while (*src && i < len)
+		new[i++] = *src++;
+	new[i] = '\0';
+	return (new);
 }
