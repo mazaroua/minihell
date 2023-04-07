@@ -65,7 +65,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (s2[++i])
 		new[j + i] = s2[i];
 	new[j + i] = '\0';
-	free(s1);
+	// free(s1);
 	return (new);
 }
 
