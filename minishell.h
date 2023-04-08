@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <signal.h>
+#include <string.h>
+#include <fcntl.h>
 #include <readline/readline.h>
 # include <readline/history.h>
 
@@ -34,6 +36,7 @@ typedef struct redirections
 {
     int					type;
     char				*file;
+    int fd;
 	struct redirections *next;
 }t_redirections;
 
@@ -131,7 +134,25 @@ t_token_list *new_token(char *value, int type);
 char	*ft_itoa(int n);
 char	*ft_strdup(char *src);
 char	*ft_strndup(char *src, int len);
+//excution
+typedef struct  t_export
+{
+    char *var;
+    char *value;
+    struct t_export *next;
+    
+}t_export;
 
+void    excution(t_cmd_line *cmd_line, char *env[],t_env_list **env_list, t_export **data);
+void    handle_echo(t_cmd_line *head);
+void    do_cd(char *path);
+void    do_pwd();
+char	**ft_split(char const *s, char c);
+void    do_pipes(t_cmd_line *data, int len,char *env[]);
+void    ft_putstr(char *s);
+void	excuter(char **commands, char *env[]);
+t_export    *data;
+t_env_list  *env_list;
 
 
 #endif

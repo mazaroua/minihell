@@ -6,13 +6,26 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 15:26:43 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/04/08 15:37:51 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/04/08 17:58:51 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+int	size_of_list(t_cmd_line *data)
+{
+	int	counter;
+	t_cmd_line *head;
 
-void	body(char *line, char **env)
+	counter = 0;
+	head = data;
+	while (head)
+	{
+		counter++;
+		head = head->next;
+	}
+	return (counter);
+}
+void	body(char *line, char **env,t_env_list **env_listt , t_export **data)
 {
 	t_token_list	*tokens;
 	t_cmd_line		*cmd_line;
@@ -30,10 +43,10 @@ void	body(char *line, char **env)
 		execution(&cmd_line, &env_list);
 	}
 		//////////////////////////////////////////////
-		// int j = 0;
-		// while (cmd_line && cmd_line->str[j])
-		// 	printf("|%s|\n", cmd_line->str[j++]);
-		// if (cmd_line && cmd_line->redirections)
+		int j = 0;
+		while (cmd_line && cmd_line->str[j])
+			printf("|%s|\n", cmd_line->str[j++]);
+		// if (cmd_line->redirections)
 		// {
 		// 	while (cmd_line->redirections)
 		// 	{
@@ -55,8 +68,7 @@ void	body(char *line, char **env)
 
 		// }
 		///////////////////////////////////////////////
-	
-	
+
 	// while (tokens)
 	// {
 	// 	printf("|%s| ", tokens->value);
@@ -79,7 +91,14 @@ int main(int ac, char **av, char **env)
 {
 	(void)ac;
 	(void)av;
-	
+	t_export    *data;
+	t_env_list  *env_list;
+
+	// data = malloc(sizeof(t_export));
+    // data = NULL;
+    // env_list = malloc(sizeof(t_env_list));
+    // env_list = NULL;
+	init_env(&data, &env_list, env);
     char	*line;
     while (1)
     {
@@ -87,6 +106,6 @@ int main(int ac, char **av, char **env)
 		if (!ft_strcmp(line, "exit"))
 			exit(0);
 		if (line)
-			body(line, env);
+			body(line, env,&env_list,&data);
     }
 }
