@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 15:26:43 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/04/05 16:47:19 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/04/08 15:37:51 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,13 @@ void	body(char *line, char **env)
 		env_vars_list(&env_list, env);
 		expand(&tokens, &env_list);
 		parser(&cmd_line, tokens);
+		execution(&cmd_line, &env_list);
 	}
 		//////////////////////////////////////////////
-		int j = 0;
-		while (cmd_line && cmd_line->str[j])
-			printf("|%s|\n", cmd_line->str[j++]);
-		// if (cmd_line->redirections)
+		// int j = 0;
+		// while (cmd_line && cmd_line->str[j])
+		// 	printf("|%s|\n", cmd_line->str[j++]);
+		// if (cmd_line && cmd_line->redirections)
 		// {
 		// 	while (cmd_line->redirections)
 		// 	{
@@ -40,8 +41,11 @@ void	body(char *line, char **env)
 		// 		cmd_line->redirections = cmd_line->redirections->next;
 		// 	}
 		// }
-		//puts("--------");
-		// if (cmd_line->next)
+		// puts("--------");
+		// if (cmd_line)
+		// 	printf("%d\n", cmd_line->separator);
+		// puts("--------");
+		// if (cmd_line && cmd_line->next)
 		// {
 		// 	int j = 0;
 		// 	while (cmd_line->next->str[j])

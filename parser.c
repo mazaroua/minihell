@@ -6,7 +6,7 @@
 /*   By: mazaroua <mazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 16:29:26 by mazaroua          #+#    #+#             */
-/*   Updated: 2023/04/05 16:49:37 by mazaroua         ###   ########.fr       */
+/*   Updated: 2023/04/05 17:53:14 by mazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void *parser(t_cmd_line **cmd_line, t_token_list *tokens)
 	{
 		i = 0;
 		tmp = NULL;
-		printf("%d\n", to_alloc_count(&tokens));
 		str = malloc(sizeof(char *) * (to_alloc_count(&tokens) + 1));
 		str[i + to_alloc_count(&tokens)] = NULL;
 		redirections = NULL;
